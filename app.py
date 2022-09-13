@@ -14,14 +14,18 @@ mongo = PyMongo(app)
 @app.route("/")
 def index():
     mars = mongo.db.mars.find_one()
+    print (mars)
     return render_template("index.html", mars=mars)
 
 
 @app.route("/scrape")
 def scrape():
     mars = mongo.db.mars
+    print ("HERE")
+    print (mars)
     mars_data = scrape_mars.scrape_all()
-    mars.update({}, mars_data, upsert=True)
+    # print ("-------", mars_data, "---------------")
+    mars.update_one({}, {"$set": mars_data}, upsert=True)
     return redirect('/', code=302)
 
 
